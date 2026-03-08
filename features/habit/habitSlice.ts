@@ -1,45 +1,51 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { fetchHabits } from "./habitAPI";
 
 type Habit = {
-    id: string;
-    title: string;
-    description: string;
-    createdAt: string;
-}
+  id: string;
+  title: string;
+  description: string;
+  createdAt: string;
+};
 
 type HabitState = {
-    habits: Habit[];
-}
+  habits: Habit[];
+};
 
 const initialState: HabitState = {
-    habits: []
-}
+  habits: []
+};
 
-export const fetchHabitsThunk = createAsyncThunk("habit/fetchHabits", async () => {
+export const fetchHabitsThunk = createAsyncThunk(
+  "habit/fetchHabits",
+  async () => {
     return await fetchHabits();
-});
+  }
+);
 
 const habitSlice = createSlice({
-    name: "habit", 
-     initialState,
+  name: "habit",
+  initialState,
   reducers: {
-    addHabits: (state, action) => {
-        state.habits = action.payload;
+    addHabits: (state, action: PayloadAction<Habit[]>) => {
+      state.habits = action.payload;
     },
-    addHabit: (state, action) => {
+
+    addHabit: (state, action: PayloadAction<Habit>) => {
       state.habits.push(action.payload);
     },
 
-    removeHabit: (state, action) => {
+    removeHabit: (state, action: PayloadAction<string>) => {
       state.habits = state.habits.filter(
-        habit => habit.id !== action.payload);
+        habit => habit.id !== action.payload
+      );
     },
   },
+
   extraReducers: (builder) => {
     builder.addCase(fetchHabitsThunk.fulfilled, (state, action) => {
-        state.habits = action.payload;
-    })
+      state.habits = action.payload;
+    });
   }
 });
 

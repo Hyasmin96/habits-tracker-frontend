@@ -1,38 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchHabitsThunk } from "@/features/habit/habitSlice";
-import type { AppState, AppDispatch } from "../Redux/store";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../Redux/store";
+import { fetchHabitsThunk } from "../features/habit/habitSlice";
+import HabitList from "../components/HabitList";
+import ProgressBar from "../components/ProgressBar";
 
 export default function Home() {
-  const dispatch = useDispatch<AppDispatch>();
 
-  const habits = useSelector((state: AppState) => state.habit.habits);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(fetchHabitsThunk());
   }, [dispatch]);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      {/* Título en negritas y más grande */}
-      <h2 style={{ fontWeight: "bold", fontSize: "24px", marginBottom: "10px" }}>
-        Habits
-      </h2>
+    <main className="p-10">
+      <h1 className="text-3xl font-bold mb-6">Habits</h1>
 
-      {/* Lista de hábitos con viñetas */}
-      {habits.length === 0 ? (
-        <p>No hay hábitos disponibles</p>
-      ) : (
-        <ul style={{ listStyleType: "disc", paddingLeft: "20px", lineHeight: "1.6", color: "#333" }}>
-          {habits.map((habit, index) => (
-            <li key={index} style={{ marginBottom: "5px" }}>
-              {habit.title}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+      <HabitList />
+    </main>
   );
 }
